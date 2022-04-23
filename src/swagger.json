@@ -1,0 +1,735 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Bate Ponto API",
+        "description": "API made for course completion work, the idea is to manage the entry and exit of employees.",
+        "contact": {
+            "email": "luizgomesdev@gmail.com",
+            "name": "Luiz Guilherme"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get token and refresh token",
+                "description": "Returns bearer token and refresh token.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Auth"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "email": "luizgomesdev@gmail.com",
+                                        "password": "123456"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get token",
+                "description": "Returns bearer token to access private routes.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Auth"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjU5ZjEyMDg2YTdmZTljNmQ5MjQ4OWQiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NTAwNjQzNDMsImV4cCI6MTY1MDA2NjE0M30.UkB8vccGnHboMnz4Xapz-hrqYxEaHxK-_P6pyEzjZ9M"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/api/user/admin": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Create administrator",
+                "description": "Create a user with administrator permission.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "name": "Luiz Guilherme dos Santos Gomes",
+                                        "email": "luizgomesdev@gmail.com",
+                                        "cpf": "537.133.620-68",
+                                        "cellphone": "(13) 9826-82332",
+                                        "password": "123456",
+                                        "confirmPassword": "123456",
+                                        "companyName": "Empresa do Luiz Guilherme LTDA",
+                                        "cnpj": "92.895.887/0001-41"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User and company created successfully"
+                    },
+                    "400": {
+                        "description": "This company or user already exists in our records"
+                    }
+                }
+            }
+        },
+        "/api/user/forgot": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Recover password",
+                "description": "We send an email with a new password to user adress to recover access.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "email": "luizgomesdev@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sended successfully"
+                    },
+                    "404": {
+                        "description": "User was not found"
+                    }
+                }
+            }
+        },
+        "/api/user/profile": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user information",
+                "description": "Returns user information to fill profile.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something unexpected happened"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user information",
+                "description": "Update user information.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "name": "Luiz Guilherme",
+                                        "email": "luizgomesdev123@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "400": {
+                        "description": "You did not pass any value to change"
+                    }
+                }
+            }
+        },
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "List employees",
+                "description": "List employees from admin company.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something unexpected happened"
+                    }
+                }
+            }
+        },
+        "/api/user/employee": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Create new employee",
+                "description": "Create new employee from admin company.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "name": "Marcos Felipe",
+                                        "email": "marcosfelipe@gmail.com",
+                                        "cpf": "892.631.830-31",
+                                        "cellphone": "(13) 9251-84321",
+                                        "password": "123456",
+                                        "confirmPassword": "123456",
+                                        "isAdmin": "false"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created sucessfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Find employee by name",
+                "description": "Find employee by name.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "The employee name to search for.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/api/user/{id}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Employee information",
+                "description": "Get employee information.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id to indentify.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something unexpected happened"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Update employee information",
+                "description": "Update employee information.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "isAdmin": "true"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id to indentify.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something unexpected happened"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Delete employee",
+                "description": "Delete employee.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id to indentify.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something unexpected happened"
+                    }
+                }
+            }
+        },
+        "/api/appointment": {
+            "get": {
+                "tags": [
+                    "Appointment"
+                ],
+                "summary": "List user appointments",
+                "description": "List user appointments.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Appointment"
+                ],
+                "summary": "Create new appointment",
+                "description": "Create new appointment.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Appointment"
+                            },
+                            "examples": {
+                                "Appointment": {
+                                    "value": {
+                                        "start": "2022-04-15T20:00:00.824+00:00"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Appointment created successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/api/appointment/search": {
+            "get": {
+                "tags": [
+                    "Appointment"
+                ],
+                "summary": "Search appointments by date",
+                "description": "Search appointments by date.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "description": "The appointment start date to search for.",
+                        "required": true
+                    },
+                    {
+                        "name": "end",
+                        "in": "query",
+                        "description": "The appointment end date to search for.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/api/appointment/{id}": {
+            "get": {
+                "tags": [
+                    "Appointment"
+                ],
+                "summary": "Get appointment",
+                "description": "Get appointment.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id to indentify.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Appointment"
+                ],
+                "summary": "Edit appointment",
+                "description": "Edit appointment.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id to indentify.",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Appointment"
+                            },
+                            "examples": {
+                                "Appointment": {
+                                    "value": {
+                                        "end": "2022-04-16T20:00:00.824+00:00"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Appointment updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Appointment"
+                ],
+                "summary": "Delete appointment",
+                "description": "Delete appointment.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id to indentify.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Appointment removed successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "cellphone": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "isAdmin": {
+                        "type": "boolean",
+                        "required": true
+                    },
+                    "company": {
+                        "type": "object",
+                        "properties": {
+                            "_id": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "name": {
+                                "type": "string",
+                                "required": true
+                            },
+                            "cnpj": {
+                                "type": "string",
+                                "required": true
+                            }
+                        }
+                    }
+                }
+            },
+            "Appointment": {
+                "type": "object",
+                "properties": {
+                    "start": {
+                        "type": "date",
+                        "required": true
+                    },
+                    "end": {
+                        "type": "date"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "required": true
+                    }
+                }
+            },
+            "Auth": {
+                "type": "object",
+                "properties": {
+                    "Token": {
+                        "type": "string"
+                    },
+                    "refreshToken": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
